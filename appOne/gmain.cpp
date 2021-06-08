@@ -1,5 +1,6 @@
-#define _EX
-#ifdef _EX
+#define _Explosion_
+
+#ifdef _‚¸‚ñŽq_
 
 #include"libOne.h"
 void gmain() {
@@ -30,6 +31,63 @@ void gmain() {
     }
 }
 
+#endif 
+
+#ifdef _Explosion_
+#include"libOne.h"
+void gmain() {
+    window(1920, 1080, full);
+    struct EXPLOSION {
+        float px, py, angle, scale;
+        int interval, counter = -1;
+    };
+    const int numExplosions = 30;
+    struct EXPLOSION e[numExplosions];
+    int triggerCount = 0;
+    int triggerInterval = 10;
+    
+    const int numImgs = 60;
+    int imgs[numImgs];
+    for (int i = 0; i < 60; i++) {
+        char filename[32];
+        sprintf_s(filename, "assets\\explosion\\a%02d.png",i);
+        imgs[i] = loadImage(filename);
+    }
+
+    while (notQuit) {
+        ++triggerCount %= triggerInterval;
+        if (triggerCount == 0) {
+            for (int i = 0; i < numExplosions; i++) {
+                if (e[i].counter == -1) {
+                    e[i].px = random(width / 2 - 200, width / 2 + 200);
+                    e[i].py = random(height / 2 - 100, height / 2 + 100);
+                    e[i].angle = random(6.28f);
+                    e[i].scale = random(5, 10);
+                    e[i].interval = random(1, 3);
+                    e[i].counter = 0;
+                    i = numExplosions;
+                }
+            }
+        }
+        for (int i = 0; i < numExplosions; i++) {
+            if (e[i].counter >= 0) {
+                e[i].counter++;
+                if (e[i].counter >= e[i].interval * numImgs) {
+                    e[i].counter = -1;
+                }
+            }
+        }
+        clear();
+        for (int i = 0; i < numExplosions; i++) {
+            if (e[i].counter >= 0) {
+                rectMode(CENTER);
+                int no = e[i].counter / e[i].interval;
+                image(imgs[no], e[i].px, e[i].py, e[i].angle, e[i].scale);
+            }
+
+        }
+    }
+}
 #endif
 
 
